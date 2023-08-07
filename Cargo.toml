@@ -12,3 +12,4 @@ resolver = "2"
 
 [workspace.dependencies]
 cli = { path = "crates/cli" }
+motus = {path = "crates/motus"}
