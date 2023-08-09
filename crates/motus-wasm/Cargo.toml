@@ -6,3 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+getrandom = {version = "0.2.10", features = ["js"]}
+motus = {version = "0.1.0", path = "../motus"}
+rand = "0.8.5"
+wasm-bindgen = "0.2.87"
