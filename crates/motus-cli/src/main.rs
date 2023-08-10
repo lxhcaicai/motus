@@ -56,6 +56,25 @@ enum Commands {
         #[arg(short, long, default_value = "7")]
         numbers: u32
     },
+
+    #[command(name = "random")]
+    #[command(about = "Generate a random password with specified complexity")]
+    #[command(
+    long_about = "Generate a random password with a configurable number of characters, including optional numbers and symbols for increased complexity."
+    )]
+    Random {
+        /// 指定生成的密码中的字符数
+        #[arg(short, long, default_value = "20", value_parser = validate_character_count)]
+        characters:u32,
+
+        /// 允许在生成的密码中包含数字
+        #[arg(short, long)]
+        numbers:bool,
+
+        /// 启用在生成的密码中包含符号
+        #[arg(short, long)]
+        symbols:bool,
+    }
 }
 
 fn main() {
@@ -75,6 +94,11 @@ fn main() {
 
     let password = match opts.command {
         Commands::Pin {numbers} => motus::pin_password(&mut rng, numbers),
+        Commands::Random {
+            characters,
+            numbers,
+            symbols,
+        } => motus::random_password(&mut rng, characters, numbers, symbols),
     };
 
     // 将密码复制到剪贴板
@@ -99,6 +123,7 @@ fn main() {
             let output = PasswordOutput{
                 kind: match opts.command {
                     Commands::Pin {..} => PasswordKind::Pin,
+                    Commands::Random {..} => PasswordKind::Random,
                 },
                 password: &password,
                 analysis: if opts.analyze {
@@ -132,6 +157,7 @@ struct PasswordOutput<'a> {
 #[serde(rename_all = "lowercase")]
 enum PasswordKind {
     Pin,
+    Random,
 }
 
 
@@ -145,6 +171,7 @@ impl Display for PasswordKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             PasswordKind::Pin => write!(f,"pin"),
+            PasswordKind::Random =>  write!(f,"random"),
         }
     }
 }
