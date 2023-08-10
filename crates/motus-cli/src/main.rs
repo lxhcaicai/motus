@@ -391,11 +391,11 @@ fn validate_character_count(s: &str) -> Result<u32, String> {
     }
 }
 
-fn validate_pin_length(s:&str) -> Result<u32,String> {
+fn validate_pin_length(s: &str) -> Result<u32, String> {
     match s.parse::<u32>() {
-        Ok(n) if(2..13).contains(&n) => Ok(n),
+        Ok(n) if (3..13).contains(&n) => Ok(n),
         Ok(_) => Err("The number of words must be between 3 and 12".to_string()),
-        Err(_) => Err("The number of words must be an integer".to_string())
+        Err(_) => Err("The number of words must be an integer".to_string()),
     }
 }
 
