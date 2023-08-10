@@ -374,3 +374,56 @@ impl Display for PasswordStrength{
         write!(f, "{}", strength)
     }
 }
+
+fn validate_word_count(s: &str) -> Result<u32, String> {
+    match s.parse::<u32>() {
+        Ok(n) if(3..16).contains(&n) => Ok(n),
+        Ok(_) => Err("The number of words must be between 4 and 15".to_string()),
+        Err(_) => Err("The number of words must be an integer".to_string())
+    }
+}
+
+fn validate_character_count(s: &str) -> Result<u32, String> {
+    match s.parse::<u32>() {
+        Ok(n) if(8..101).contains(&n) => Ok(n),
+        Ok(_) => Err("The number of words must be between 8 and 100".to_string()),
+        Err(_) => Err("The number of words must be an integer".to_string()),
+    }
+}
+
+fn validate_pin_length(s:&str) -> Result<u32,String> {
+    match s.parse::<u32>() {
+        Ok(n) if(2..13).contains(&n) => Ok(n),
+        Ok(_) => Err("The number of words must be between 3 and 12".to_string()),
+        Err(_) => Err("The number of words must be an integer".to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_validate_word_count() {
+        assert!(validate_word_count("2").is_err());
+        assert!(validate_word_count("3").is_ok());
+        assert!(validate_word_count("15").is_ok());
+        assert!(validate_word_count("16").is_err());
+    }
+
+    #[test]
+    fn test_validate_character_count() {
+        assert!(validate_character_count("7").is_err());
+        assert!(validate_character_count("8").is_ok());
+        assert!(validate_character_count("100").is_ok());
+        assert!(validate_character_count("101").is_err());
+    }
+
+    #[test]
+    fn test_validate_pin_length() {
+        assert!(validate_pin_length("2").is_err());
+        assert!(validate_pin_length("3").is_ok());
+        assert!(validate_pin_length("12").is_ok());
+        assert!(validate_pin_length("13").is_err());
+    }
+}
